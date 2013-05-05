@@ -20,17 +20,20 @@ describe "AddModule" do
     FileUtils.cp(template_file, file)
   end
 
+  it "leaves lines before the class name alone" do
+    subject.add("Web")
+    assert_equal "# this is a sample ruby file\n", File.readlines(file)[0]
+  end
+
   it "adds module to a file" do
     subject.add("Web")
-    assert_equal "module Web\n", File.readlines(file)[0]
+    assert_equal "module Web\n", File.readlines(file)[2]
   end
 
   it "indents the code between the module" do
     subject.add("Web")
-    lines = File.readlines(file)
-    lines.pop; lines.shift
-    lines.each do |line|
-      assert_equal "  ", line[0..1]
+    File.readlines(file)[3, 5].each do |line|
+      assert_equal "  ", line[0, 2]
     end
   end
 

@@ -1,15 +1,17 @@
-require "fileutils"
-
 class AddModule
   def initialize(file_name)
-    @file_name = file_name
+    @file_name     = file_name
+    @file_contents = File.readlines(file_name)
   end
 
   def add(name)
     rename_file
-    add_module(name)
-    copy_module_contents
-    add_module_closing_end
+    File.open(@file_name, "w") do |file|
+      prefix.each { |line| file.puts(line) }
+      file.puts "module #{name}"
+      suffix.each { |line| file.puts("  " + line) }
+      file.puts("end")
+    end
   end
 
   private
@@ -18,24 +20,16 @@ class AddModule
     File.rename(@file_name, backup_file_name)
   end
 
-  def add_module(name)
-    File.open(@file_name, "w") do |file|
-      file.puts("module #{name}")
-    end
+  def module_break
+    @file_contents.find_index { |l| l =~ /^(module|class) / }
   end
 
-  def copy_module_contents
-    File.open(@file_name, "a") do |file|
-      File.open(backup_file_name, "r") do |back_up_file|
-        back_up_file.each { |line| file.puts("  " + line) }
-      end
-    end
+  def prefix
+    @file_contents[0, module_break]
   end
 
-  def add_module_closing_end
-    File.open(@file_name, "a") do |file|
-      file.puts("end")
-    end
+  def suffix
+    @file_contents[module_break, @file_contents.count]
   end
 
   def backup_file_name
