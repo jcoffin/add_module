@@ -7,20 +7,20 @@ require "fileutils"
 require "add_module"
 
 describe "AddModule" do
-  subject { AddModule.new(test_file) }
+  subject { AddModule.new(file) }
   
   let(:fixture_path)  { File.expand_path("fixtures", File.dirname(__FILE__))}
   let(:template_file) {"#{fixture_path}/sample_ruby_file.rb" }
-  let(:test_file)     {"#{fixture_path}/sample_ruby_file_copy.rb" }
+  let(:file)          {"#{fixture_path}/sample_ruby_file_copy.rb" }
+  let(:backup_file)   { file + ".bak" }
   
   before do
-    FileUtils.rm(test_file) if File.exists?(test_file)
-    FileUtils.cp(template_file, test_file)
+    FileUtils.rm(file) if File.exists?(file)
+    FileUtils.cp(template_file, file)
   end
 
   it "adds module to a file" do
     subject.add("Web")
-    assert_equal "module Web\n", File.readlines(test_file)[0]
+    assert_equal "module Web\n", File.readlines(file)[0]
   end
 end
-
