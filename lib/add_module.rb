@@ -8,7 +8,8 @@ class AddModule
   def add(name)
     rename_file
     add_module(name)
-    append_to_file
+    copy_module_contents
+    add_module_closing_end
   end
 
   private
@@ -23,11 +24,17 @@ class AddModule
     end
   end
 
-  def append_to_file
+  def copy_module_contents
     File.open(@file_name, "a") do |file|
       File.open(backup_file_name, "r") do |back_up_file|
-        back_up_file.each { |line| file.puts line }
+        back_up_file.each { |line| file.puts("  " + line) }
       end
+    end
+  end
+
+  def add_module_closing_end
+    File.open(@file_name, "a") do |file|
+      file.puts("end")
     end
   end
 
