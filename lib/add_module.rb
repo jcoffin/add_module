@@ -1,10 +1,8 @@
 require "fileutils"
-require "tempfile"
 
 class AddModule
   def initialize(file_name)
     @file_name = file_name
-    @tmp_file  = Tempfile.new(file_name)
   end
 
   def add(name)
