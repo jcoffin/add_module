@@ -1,9 +1,14 @@
 #!/usr/bin/env ruby
 
+require "fileutils"
 require_relative "../lib/add_module"
 
 if ARGV[0].nil? || ARGV[1].nil?
   abort "Missing arguments: add_ruby_module module file"
+end
+
+unless File.exist?(ARGV[1])
+  abort "File '#{ARGV[1]}' doesn't exist"
 end
 
 AddModule.new(ARGV[1]).add(ARGV[0])
