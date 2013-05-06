@@ -2,4 +2,9 @@
 
 require_relative "../lib/add_module"
 
+if ARGV[0].nil? || ARGV[1].nil?
+  abort "Missing arguments: add_ruby_module module file"
+end
+
 AddModule.new(ARGV[1]).add(ARGV[0])
+
